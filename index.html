@@ -1,75 +1,203 @@
-<html>
+<html lang="en">
 <head>
-    <title>Pearson Correlation Calculator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karl Pearson Correlation Calculator</title>
 
     <style>
-        body {
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
-            background: #f2f4f7;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
             min-height: 100vh;
+            padding: 30px 15px;
         }
 
         .container {
+            max-width: 1000px;
+            margin: auto;
             background: white;
-            width: 450px;
+            border-radius: 18px;
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
         h1 {
             text-align: center;
             color: #333;
+            margin-bottom: 10px;
         }
 
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 15px;
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
         }
 
-        input {
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
             width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
             padding: 12px;
-            margin-top: 7px;
-            box-sizing: border-box;
+        }
+
+        td {
+            border: 1px solid #ddd;
+            padding: 7px;
+            text-align: center;
+        }
+
+        td input {
+            width: 100%;
+            padding: 9px;
             border: 1px solid #ccc;
-            border-radius: 8px;
+            border-radius: 6px;
+            text-align: center;
             font-size: 15px;
         }
 
+        td input:focus {
+            outline: none;
+            border: 2px solid #667eea;
+        }
+
+        .calculated {
+            background: #f3f4ff;
+            color: #333;
+        }
+
+        .sum-row {
+            background: #eee;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
         button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 20px;
             border: none;
+            padding: 12px 20px;
             border-radius: 8px;
-            background: #2563eb;
-            color: white;
-            font-size: 16px;
             cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: 0.2s;
         }
 
-        button:hover {
-            background: #1d4ed8;
+        .add-btn {
+            background: #28a745;
+            color: white;
         }
 
-        #result {
-            margin-top: 20px;
-            padding: 15px;
-            background: #eef2ff;
-            border-radius: 8px;
+        .add-btn:hover {
+            background: #218838;
+        }
+
+        .calculate-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .calculate-btn:hover {
+            background: #5568d8;
+        }
+
+        .reset-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .reset-btn:hover {
+            background: #c82333;
+        }
+
+        .delete-btn {
+            background: #ff5252;
+            color: white;
+            padding: 7px 11px;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            background: #f0f4ff;
             text-align: center;
-            font-size: 18px;
+            display: none;
+        }
+
+        .result h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .correlation {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .interpretation {
+            margin-top: 10px;
+            font-size: 17px;
+            color: #555;
         }
 
         .formula {
+            margin-top: 25px;
+            padding: 18px;
+            background: #f7f7f7;
+            border-left: 5px solid #667eea;
+            border-radius: 8px;
+        }
+
+        .formula h3 {
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .formula p {
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .instructions {
+            background: #fff8e1;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
             margin-top: 20px;
-            font-size: 13px;
-            color: #666;
+            border-radius: 8px;
+            color: #555;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 18px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
@@ -78,28 +206,99 @@
 
 <div class="container">
 
-    <h1>Pearson Correlation</h1>
+    <h1>📊 Karl Pearson Correlation Calculator</h1>
 
-    <label>Enter X values:</label>
-    <input type="text" id="xValues"
-           placeholder="10 20 30 40 50">
+    <p class="subtitle">
+        Enter your X and Y values in the table below
+    </p>
 
-    <label>Enter Y values:</label>
-    <input type="text" id="yValues"
-           placeholder="15 25 35 45 55">
+    <div class="instructions">
+        <strong>How to use:</strong>
+        Enter values in the X and Y columns. 
+        Click <b>Add Row</b> to add more observations, then click
+        <b>Calculate Correlation</b>.
+    </div>
 
-    <button onclick="calculatePearson()">
-        Calculate
-    </button>
+    <div class="table-container">
 
-    <div id="result">
-        Result will appear here
+        <table id="dataTable">
+
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>X</th>
+                    <th>Y</th>
+                    <th>X²</th>
+                    <th>Y²</th>
+                    <th>XY</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="tableBody">
+                <!-- Rows will be created by JavaScript -->
+            </tbody>
+
+            <tfoot>
+                <tr class="sum-row">
+                    <td>Σ</td>
+                    <td id="sumX">0</td>
+                    <td id="sumY">0</td>
+                    <td id="sumX2">0</td>
+                    <td id="sumY2">0</td>
+                    <td id="sumXY">0</td>
+                    <td>-</td>
+                </tr>
+            </tfoot>
+
+        </table>
+
+    </div>
+
+    <div class="buttons">
+
+        <button class="add-btn" onclick="addRow()">
+            ➕ Add Row
+        </button>
+
+        <button class="calculate-btn" onclick="calculateCorrelation()">
+            🧮 Calculate Correlation
+        </button>
+
+        <button class="reset-btn" onclick="resetTable()">
+            🔄 Reset
+        </button>
+
+    </div>
+
+    <div class="result" id="result">
+
+        <h2>Karl Pearson Correlation Coefficient</h2>
+
+        <div class="correlation" id="correlationValue">
+            r = 0
+        </div>
+
+        <div class="interpretation" id="interpretation"></div>
+
     </div>
 
     <div class="formula">
-        <b>Formula:</b><br><br>
-        r = [nΣXY − (ΣX)(ΣY)] /
-        √([nΣX² − (ΣX)²][nΣY² − (ΣY)²])
+
+        <h3>📐 Formula</h3>
+
+        <p>
+            r =
+            [nΣXY − (ΣX)(ΣY)]
+            /
+            √{[nΣX² − (ΣX)²][nΣY² − (ΣY)²]}
+        </p>
+
+        <p>
+            Where <b>r</b> is the Karl Pearson correlation coefficient
+            and <b>n</b> is the number of observations.
+        </p>
+
     </div>
 
 </div>
@@ -107,70 +306,345 @@
 
 <script>
 
-function calculatePearson() {
+let rowNumber = 0;
 
-    // Get input values
-    let x = document.getElementById("xValues").value
-        .trim().split(/\s+/).map(Number);
 
-    let y = document.getElementById("yValues").value
-        .trim().split(/\s+/).map(Number);
+/* -------------------------
+   ADD NEW ROW
+------------------------- */
 
-    // Check same number of values
-    if (x.length !== y.length) {
-        document.getElementById("result").innerHTML =
-            "❌ X and Y must have the same number of values.";
-        return;
-    }
+function addRow(x = "", y = "") {
 
-    let n = x.length;
+    rowNumber++;
 
-    if (n < 2) {
-        document.getElementById("result").innerHTML =
-            "❌ Enter at least 2 pairs of values.";
-        return;
-    }
+    const tableBody = document.getElementById("tableBody");
 
-    // Calculate sums
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+
+        <td>${rowNumber}</td>
+
+        <td>
+            <input
+                type="number"
+                step="any"
+                class="x-value"
+                value="${x}"
+                oninput="updateCalculations()"
+                placeholder="Enter X"
+            >
+        </td>
+
+        <td>
+            <input
+                type="number"
+                step="any"
+                class="y-value"
+                value="${y}"
+                oninput="updateCalculations()"
+                placeholder="Enter Y"
+            >
+        </td>
+
+        <td class="calculated x2">0</td>
+
+        <td class="calculated y2">0</td>
+
+        <td class="calculated xy">0</td>
+
+        <td>
+            <button
+                class="delete-btn"
+                onclick="deleteRow(this)"
+            >
+                🗑
+            </button>
+        </td>
+
+    `;
+
+    tableBody.appendChild(row);
+
+    updateCalculations();
+}
+
+
+/* -------------------------
+   DELETE ROW
+------------------------- */
+
+function deleteRow(button) {
+
+    button.closest("tr").remove();
+
+    renumberRows();
+
+    updateCalculations();
+}
+
+
+/* -------------------------
+   RENUMBER ROWS
+------------------------- */
+
+function renumberRows() {
+
+    const rows = document.querySelectorAll("#tableBody tr");
+
+    rowNumber = 0;
+
+    rows.forEach(row => {
+
+        rowNumber++;
+
+        row.cells[0].textContent = rowNumber;
+
+    });
+
+}
+
+
+/* -------------------------
+   UPDATE TABLE CALCULATIONS
+------------------------- */
+
+function updateCalculations() {
+
+    const rows = document.querySelectorAll("#tableBody tr");
+
     let sumX = 0;
     let sumY = 0;
-    let sumXY = 0;
     let sumX2 = 0;
     let sumY2 = 0;
+    let sumXY = 0;
+
+    rows.forEach(row => {
+
+        const xInput = row.querySelector(".x-value");
+        const yInput = row.querySelector(".y-value");
+
+        const x2Cell = row.querySelector(".x2");
+        const y2Cell = row.querySelector(".y2");
+        const xyCell = row.querySelector(".xy");
+
+        const x = parseFloat(xInput.value);
+        const y = parseFloat(yInput.value);
+
+        if (!isNaN(x) && !isNaN(y)) {
+
+            const x2 = x * x;
+            const y2 = y * y;
+            const xy = x * y;
+
+            x2Cell.textContent = formatNumber(x2);
+            y2Cell.textContent = formatNumber(y2);
+            xyCell.textContent = formatNumber(xy);
+
+            sumX += x;
+            sumY += y;
+            sumX2 += x2;
+            sumY2 += y2;
+            sumXY += xy;
+
+        } else {
+
+            x2Cell.textContent = "0";
+            y2Cell.textContent = "0";
+            xyCell.textContent = "0";
+
+        }
+
+    });
+
+    document.getElementById("sumX").textContent = formatNumber(sumX);
+    document.getElementById("sumY").textContent = formatNumber(sumY);
+    document.getElementById("sumX2").textContent = formatNumber(sumX2);
+    document.getElementById("sumY2").textContent = formatNumber(sumY2);
+    document.getElementById("sumXY").textContent = formatNumber(sumXY);
+
+}
+
+
+/* -------------------------
+   CALCULATE CORRELATION
+------------------------- */
+
+function calculateCorrelation() {
+
+    const rows = document.querySelectorAll("#tableBody tr");
+
+    let X = [];
+    let Y = [];
+
+    rows.forEach(row => {
+
+        const x = parseFloat(
+            row.querySelector(".x-value").value
+        );
+
+        const y = parseFloat(
+            row.querySelector(".y-value").value
+        );
+
+        if (!isNaN(x) && !isNaN(y)) {
+
+            X.push(x);
+            Y.push(y);
+
+        }
+
+    });
+
+
+    const n = X.length;
+
+
+    if (n < 2) {
+
+        alert("Please enter at least 2 complete pairs of X and Y values.");
+
+        return;
+
+    }
+
+
+    let sumX = 0;
+    let sumY = 0;
+    let sumX2 = 0;
+    let sumY2 = 0;
+    let sumXY = 0;
+
 
     for (let i = 0; i < n; i++) {
 
-        sumX += x[i];
-        sumY += y[i];
+        sumX += X[i];
+        sumY += Y[i];
 
-        sumXY += x[i] * y[i];
+        sumX2 += X[i] * X[i];
+        sumY2 += Y[i] * Y[i];
 
-        sumX2 += x[i] * x[i];
-        sumY2 += y[i] * y[i];
+        sumXY += X[i] * Y[i];
+
     }
 
-    // Pearson formula
-    let numerator =
-        n * sumXY - sumX * sumY;
 
-    let denominator =
+    const numerator =
+        (n * sumXY) - (sumX * sumY);
+
+
+    const denominator =
         Math.sqrt(
-            (n * sumX2 - sumX * sumX) *
-            (n * sumY2 - sumY * sumY)
+            ((n * sumX2) - (sumX * sumX)) *
+            ((n * sumY2) - (sumY * sumY))
         );
 
+
     if (denominator === 0) {
-        document.getElementById("result").innerHTML =
-            "❌ Correlation cannot be calculated.";
+
+        alert(
+            "Correlation cannot be calculated because all X or all Y values are the same."
+        );
+
         return;
+
     }
 
-    let r = numerator / denominator;
 
-    // Display result
-    document.getElementById("result").innerHTML =
-        "<b>Karl Pearson's Coefficient (r)</b><br><br>" +
-        r.toFixed(4);
+    const r = numerator / denominator;
+
+
+    document.getElementById("result").style.display = "block";
+
+    document.getElementById("correlationValue").textContent =
+        "r = " + r.toFixed(4);
+
+
+    document.getElementById("interpretation").textContent =
+        getInterpretation(r);
+
+}
+
+
+/* -------------------------
+   INTERPRETATION
+------------------------- */
+
+function getInterpretation(r) {
+
+    const absoluteR = Math.abs(r);
+
+    if (absoluteR >= 0.9) {
+
+        return "Very strong correlation";
+
+    } else if (absoluteR >= 0.7) {
+
+        return "Strong correlation";
+
+    } else if (absoluteR >= 0.5) {
+
+        return "Moderate correlation";
+
+    } else if (absoluteR >= 0.3) {
+
+        return "Weak correlation";
+
+    } else {
+
+        return "Very weak or no correlation";
+
+    }
+
+}
+
+
+/* -------------------------
+   FORMAT NUMBERS
+------------------------- */
+
+function formatNumber(number) {
+
+    if (Number.isInteger(number)) {
+
+        return number;
+
+    }
+
+    return Number(number.toFixed(4));
+
+}
+
+
+/* -------------------------
+   RESET
+------------------------- */
+
+function resetTable() {
+
+    document.getElementById("tableBody").innerHTML = "";
+
+    rowNumber = 0;
+
+    document.getElementById("result").style.display = "none";
+
+    for (let i = 0; i < 5; i++) {
+
+        addRow();
+
+    }
+
+}
+
+
+/* -------------------------
+   INITIAL TABLE
+------------------------- */
+
+for (let i = 0; i < 5; i++) {
+
+    addRow();
+
 }
 
 </script>
