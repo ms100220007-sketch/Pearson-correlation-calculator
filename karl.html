@@ -1,0 +1,179 @@
+<html>
+<head>
+    <title>Pearson Correlation Calculator</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f4f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            width: 450px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eef2ff;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .formula {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Pearson Correlation</h1>
+
+    <label>Enter X values:</label>
+    <input type="text" id="xValues"
+           placeholder="10 20 30 40 50">
+
+    <label>Enter Y values:</label>
+    <input type="text" id="yValues"
+           placeholder="15 25 35 45 55">
+
+    <button onclick="calculatePearson()">
+        Calculate
+    </button>
+
+    <div id="result">
+        Result will appear here
+    </div>
+
+    <div class="formula">
+        <b>Formula:</b><br><br>
+        r = [nΣXY − (ΣX)(ΣY)] /
+        √([nΣX² − (ΣX)²][nΣY² − (ΣY)²])
+    </div>
+
+</div>
+
+
+<script>
+
+function calculatePearson() {
+
+    // Get input values
+    let x = document.getElementById("xValues").value
+        .trim().split(/\s+/).map(Number);
+
+    let y = document.getElementById("yValues").value
+        .trim().split(/\s+/).map(Number);
+
+    // Check same number of values
+    if (x.length !== y.length) {
+        document.getElementById("result").innerHTML =
+            "❌ X and Y must have the same number of values.";
+        return;
+    }
+
+    let n = x.length;
+
+    if (n < 2) {
+        document.getElementById("result").innerHTML =
+            "❌ Enter at least 2 pairs of values.";
+        return;
+    }
+
+    // Calculate sums
+    let sumX = 0;
+    let sumY = 0;
+    let sumXY = 0;
+    let sumX2 = 0;
+    let sumY2 = 0;
+
+    for (let i = 0; i < n; i++) {
+
+        sumX += x[i];
+        sumY += y[i];
+
+        sumXY += x[i] * y[i];
+
+        sumX2 += x[i] * x[i];
+        sumY2 += y[i] * y[i];
+    }
+
+    // Pearson formula
+    let numerator =
+        n * sumXY - sumX * sumY;
+
+    let denominator =
+        Math.sqrt(
+            (n * sumX2 - sumX * sumX) *
+            (n * sumY2 - sumY * sumY)
+        );
+
+    if (denominator === 0) {
+        document.getElementById("result").innerHTML =
+            "❌ Correlation cannot be calculated.";
+        return;
+    }
+
+    let r = numerator / denominator;
+
+    // Display result
+    document.getElementById("result").innerHTML =
+        "<b>Karl Pearson's Coefficient (r)</b><br><br>" +
+        r.toFixed(4);
+}
+
+</script>
+
+</body>
+</html>
